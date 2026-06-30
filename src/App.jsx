@@ -73,8 +73,17 @@ function App() {
   const decreaseFontSize = () => setFontSize(prev => Math.max(prev - 2, 10));
 
   const handlePointerDown = (e) => {
-    // Don't drag if clicking interactive elements
-    if (e.target.closest('.tool-btn') || e.target.closest('.color-btn') || e.target.closest('.close-btn') || e.target.closest('.color-picker-input')) {
+    // Left button only, and never start a window-drag from the textarea or the
+    // interactive controls — otherwise the user can't place the cursor or
+    // select text inside the note.
+    if (e.button !== 0) return;
+    if (
+      e.target.closest('.note-content') ||
+      e.target.closest('.tool-btn') ||
+      e.target.closest('.color-btn') ||
+      e.target.closest('.close-btn') ||
+      e.target.closest('.color-picker-input')
+    ) {
       return;
     }
     isDragging.current = true;
