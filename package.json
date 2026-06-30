@@ -5,13 +5,13 @@
   "description": "A lightweight, always-on-top Khmer-language desktop sticky note built with Electron and React.",
   "author": "K. Sothea",
   "license": "Apache-2.0",
-  "homepage": "https://github.com/kruysothea/mera-note#readme",
+  "homepage": "https://github.com/k-sothea/mera-note#readme",
   "repository": {
     "type": "git",
-    "url": "https://github.com/kruysothea/mera-note.git"
+    "url": "https://github.com/k-sothea/mera-note.git"
   },
   "bugs": {
-    "url": "https://github.com/kruysothea/mera-note/issues"
+    "url": "https://github.com/k-sothea/mera-note/issues"
   },
   "keywords": [
     "electron",
