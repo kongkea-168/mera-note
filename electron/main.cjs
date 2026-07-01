@@ -89,6 +89,48 @@ function createWindow() {
     return { action: 'deny' };
   });
 
+  mainWindow.webContents.on('context-menu', (event, params) => {
+    const { Menu, MenuItem } = require('electron');
+    const menu = new Menu();
+
+    if (params.isEditable) {
+      menu.append(new MenuItem({ role: 'undo' }));
+      menu.append(new MenuItem({ role: 'redo' }));
+      menu.append(new MenuItem({ type: 'separator' }));
+    }
+
+    if (params.selectionText) {
+      menu.append(new MenuItem({ role: 'copy' }));
+      if (params.isEditable) {
+        menu.append(new MenuItem({ role: 'cut' }));
+      }
+    }
+
+    if (params.isEditable) {
+      menu.append(new MenuItem({ role: 'paste' }));
+    }
+
+    if (params.selectionText) {
+      menu.append(new MenuItem({ type: 'separator' }));
+      menu.append(new MenuItem({
+        label: 'Share to Telegram',
+        click: () => {
+          const text = encodeURIComponent(params.selectionText);
+          shell.openExternal(`tg://msg_url?text=${text}`);
+        }
+      }));
+    }
+
+    if (params.isEditable) {
+      menu.append(new MenuItem({ type: 'separator' }));
+      menu.append(new MenuItem({ role: 'selectAll' }));
+    }
+
+    if (menu.items.length > 0) {
+      menu.popup({ window: mainWindow, x: params.x, y: params.y });
+    }
+  });
+
   if (isDev) {
     mainWindow.loadURL('http://localhost:5173');
   } else {
