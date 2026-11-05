@@ -54,3 +54,4 @@ Thumbs.db
 .cache/
 .vite/
 coverage/
+test-results/
