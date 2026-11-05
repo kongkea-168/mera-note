@@ -19,18 +19,18 @@ Built with Electron, React, and Vite.
 
 ## Tech stack
 
-- [Electron](https://www.electronjs.org/) 42 (desktop shell)
+- [Electron](https://www.electronjs.org/) 45 (desktop shell)
 - [React](https://react.dev/) 19 + [Vite](https://vite.dev/) (renderer)
 - [electron-builder](https://www.electron.build/) (packaging)
 - [oxlint](https://oxc.rs/) (linting)
 
 ## Getting started
 
-Requires Node.js 20+.
+Requires Node.js 22.12.0 or newer.
 
 ```bash
 # install dependencies
-npm install
+npm ci
 
 # run in development (Vite dev server + Electron with hot reload)
 npm run dev
@@ -38,6 +38,19 @@ npm run dev
 # lint
 npm run lint
 ```
+
+## Verification
+
+```bash
+# Lint, build, exercise the real Electron app, and audit all dependencies
+npm run verify
+```
+
+The Electron smoke tests require a graphical desktop session (use `xvfb-run -a npm run verify` on headless Linux). They use a temporary profile so your own notes are untouched. Tests cover Khmer/English autosave, restart persistence, themes, font controls, hiding/restoring the window, and renderer isolation. Screenshots are saved in the ignored `test-results/` directory.
+
+After packaging, set `MERA_TEST_EXECUTABLE` to the absolute path of the app executable and run `node --test tests/electron.test.mjs` to exercise the packaged app with the same tests. The GitHub workflow runs both source and packaged checks on macOS and Windows; it does not publish installers.
+
+The lockfile includes development and packaging security updates. The `minimatch` override uses patched version 11 for the modern packaging tools. Explicit exceptions keep `@electron/asar`, `dir-compare`, and `glob` on patched version 3, and `filelist` on patched version 5, preserving their older APIs. Explicit overrides also remain valid when npm rebuilds its dependency-tree cache. This addresses [GHSA-g3hv-75wg-m249](https://github.com/isaacs/minimatch/security/advisories/GHSA-g3hv-75wg-m249). Keep these overrides until the upstream ranges no longer need them.
 
 ## Building installers
 

@@ -1,0 +1,59 @@
+name: Verify
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  desktop:
+    name: Desktop (${{ matrix.os }})
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [macos-latest, windows-latest]
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 20
+    env:
+      CSC_IDENTITY_AUTO_DISCOVERY: 'false'
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
+        with:
+          node-version: '22'
+          cache: npm
+      - run: npm ci
+      - name: Install Electron binary
+        run: node node_modules/electron/install.js
+        timeout-minutes: 5
+      - run: npm ls --all
+      - run: npm run verify
+        env:
+          DEBUG: pw:browser
+      - name: Package macOS
+        if: runner.os == 'macOS'
+        run: npx --no-install electron-builder --mac --publish never
+      - name: Package Windows
+        if: runner.os == 'Windows'
+        run: npx --no-install electron-builder --win --x64 --publish never
+      - name: Test packaged macOS app
+        if: runner.os == 'macOS'
+        shell: bash
+        run: |
+          if [ "$(node -p process.arch)" = "arm64" ]; then
+            export MERA_TEST_EXECUTABLE="$PWD/release/mac-arm64/MERA Note.app/Contents/MacOS/MERA Note"
+          else
+            export MERA_TEST_EXECUTABLE="$PWD/release/mac/MERA Note.app/Contents/MacOS/MERA Note"
+          fi
+          node --test tests/electron.test.mjs
+      - name: Test packaged Windows app
+        if: runner.os == 'Windows'
+        shell: pwsh
+        env:
+          DEBUG: pw:browser
+        run: |
+          $env:MERA_TEST_EXECUTABLE = Join-Path $PWD 'release/win-unpacked/MERA Note.exe'
+          node --test tests/electron.test.mjs
