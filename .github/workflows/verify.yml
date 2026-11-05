@@ -26,8 +26,13 @@ jobs:
           node-version: '22'
           cache: npm
       - run: npm ci
+      - name: Install Electron binary
+        run: node node_modules/electron/install.js
+        timeout-minutes: 5
       - run: npm ls --all
       - run: npm run verify
+        env:
+          DEBUG: pw:browser
       - name: Package macOS
         if: runner.os == 'macOS'
         run: npx --no-install electron-builder --mac --publish never
@@ -47,6 +52,8 @@ jobs:
       - name: Test packaged Windows app
         if: runner.os == 'Windows'
         shell: pwsh
+        env:
+          DEBUG: pw:browser
         run: |
           $env:MERA_TEST_EXECUTABLE = Join-Path $PWD 'release/win-unpacked/MERA Note.exe'
           node --test tests/electron.test.mjs

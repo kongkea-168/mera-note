@@ -33,7 +33,7 @@ test('production Electron app', { timeout: 120_000 }, async (t) => {
     // Electron applies this switch before loading the app, isolating even its
     // initial autosave. The same tests can exercise the actual packaged binary.
     const args = [...(executablePath ? [] : [root]), `--user-data-dir=${profile}`];
-    app = await electron.launch({ executablePath, args, cwd: root, env });
+    app = await electron.launch({ executablePath, args, cwd: root, env, timeout: 30_000 });
     const info = await app.evaluate(({ app: mainApp }) => ({
       profile: mainApp.getPath('userData'), appPath: mainApp.getAppPath(), packaged: mainApp.isPackaged,
     }));
