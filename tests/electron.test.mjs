@@ -7,7 +7,8 @@ import { fileURLToPath } from 'node:url';
 import { setTimeout as delay } from 'node:timers/promises';
 import { _electron as electron } from 'playwright';
 
-const root = fileURLToPath(new URL('../', import.meta.url));
+// Avoid a trailing Windows backslash escaping Playwright's shell argument quote.
+const root = path.resolve(fileURLToPath(new URL('../', import.meta.url)));
 const artifacts = path.join(root, 'test-results');
 
 async function eventually(check) {
