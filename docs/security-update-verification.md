@@ -6,7 +6,7 @@ Updates PR #3 from commit `7117ff2bfe0d4eed809baa7a1be6452f32560bf5`.
 
 - Refresh direct dependency minimum versions and the complete npm lockfile.
 - Upgrade Electron from 42.5.1 to the current stable 45.2.3, including its Chromium/Node runtime. Development now requires Node 22.12.0 or newer.
-- Resolve the remaining packaging-tool advisory with `minimatch@>=7.0.0 <11.0.1` overridden to `^11.0.4`. Version 3 and 5 consumers retain their existing APIs and patched releases. Both packaging consumers of the overridden versions use supported named exports (`minimatch` and `Minimatch`).
+- Resolve the remaining packaging-tool advisory with `minimatch` overridden to `^11.0.4`. Explicit consumer exceptions retain patched version 3 for `@electron/asar`, `dir-compare`, and `glob`, and patched version 5 for `filelist`. Both modern packaging consumers use supported named exports (`minimatch` and `Minimatch`). The explicit overrides remain valid even without npm's hidden dependency-tree cache; the original range-based override did not.
 - Add real Electron smoke tests, an `npm run verify` command, and macOS/Windows CI with read-only repository permissions and pinned GitHub Actions. CI builds and tests without publishing.
 - Fix an existing toolbar overflow discovered during runtime testing: the controls now wrap into two rows so all themes and Hide fit inside the default window. No note format or storage location changed.
 

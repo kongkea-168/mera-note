@@ -50,7 +50,7 @@ The Electron smoke tests require a graphical desktop session (use `xvfb-run -a n
 
 After packaging, set `MERA_TEST_EXECUTABLE` to the absolute path of the app executable and run `node --test tests/electron.test.mjs` to exercise the packaged app with the same tests. The GitHub workflow runs both source and packaged checks on macOS and Windows; it does not publish installers.
 
-The lockfile includes development and packaging security updates. A version-scoped `minimatch` override applies version 11 only to affected versions 7–11.0.0 until the packaging tools update their own dependency ranges; older, API-incompatible minimatch consumers are left on their patched major versions. This addresses [GHSA-g3hv-75wg-m249](https://github.com/isaacs/minimatch/security/advisories/GHSA-g3hv-75wg-m249). Keep this override until the upstream ranges no longer need it.
+The lockfile includes development and packaging security updates. The `minimatch` override uses patched version 11 for the modern packaging tools. Explicit exceptions keep `@electron/asar`, `dir-compare`, and `glob` on patched version 3, and `filelist` on patched version 5, preserving their older APIs. Explicit overrides also remain valid when npm rebuilds its dependency-tree cache. This addresses [GHSA-g3hv-75wg-m249](https://github.com/isaacs/minimatch/security/advisories/GHSA-g3hv-75wg-m249). Keep these overrides until the upstream ranges no longer need them.
 
 ## Building installers
 

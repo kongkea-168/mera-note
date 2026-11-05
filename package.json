@@ -78,6 +78,18 @@
     "playwright": "^1.64.1"
   },
   "overrides": {
-    "minimatch@>=7.0.0 <11.0.1": "^11.0.4"
+    "minimatch": "^11.0.4",
+    "@electron/asar": {
+      "minimatch": "^3.1.5"
+    },
+    "dir-compare": {
+      "minimatch": "^3.1.5"
+    },
+    "glob": {
+      "minimatch": "^3.1.5"
+    },
+    "filelist": {
+      "minimatch": "^5.1.9"
+    }
   }
 }
